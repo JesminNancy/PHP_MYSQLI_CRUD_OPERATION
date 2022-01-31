@@ -5,13 +5,25 @@ include('function.php');
 
 $objCrudapp = new crudApp();
 
-if(isset($_POST['add_info'])){
 
-    $return_msg = $objCrudapp ->add_data($_POST);
-}
     $students = $objCrudapp ->display_data();
 
+       if(isset($_GET['status'])){
+           if($_GET['status'] = 'edit'){
+               $id = $_GET['id'];
+               $returndata = $objCrudapp ->display_data_by_id($id);
+           }
+       } 
+
+       if(isset($_POST['edit_info'])){
+            $msg = $objCrudapp ->update_data($_POST);
+       }
 ?>
+
+
+
+
+
 
 <!doctype html>
 <html lang="en">
@@ -30,46 +42,16 @@ if(isset($_POST['add_info'])){
             <h2><a style="text-decoration:none;" href="index.php">Student Database</a></h2>
             <form action="" method="POST" enctype="multipart/form-data" class="form">
 
-            <?php if(isset( $return_msg)){echo  $return_msg;}?>
-                <input class="form-control mb-3" type="text" name="std_name" placeholder="Enter Name">
-                <input class="form-control mb-3" type="number" name="std_roll" placeholder="Enter Roll">
+            <?php if(isset( $msg)){echo  $msg;}?>
+                <input class="form-control mb-3" type="text" name="u_std_name" value="<?php echo $returndata['Name'];?>">
+                <input class="form-control mb-3" type="number" name="u_std_roll" value="<?php echo $returndata['Roll'];?>">
                 <label for="img mb-3">Upload Your Image</label>
-                <input class="form-control mb-3" type="file" name="upload_img">
-                <input type="submit" name="add_info" value="Add Information" class="form-control bg-warning">
+                <input class="form-control mb-3" type="file" name="u_upload_img">
+                <input type="hidden" name="std_id" value="<?php echo $returndata['ID'];?>">
+                <input type="submit" name="edit_info" value="Update Information" class="form-control bg-warning">
             </form>
         </div>
-        <div class="container my-4 p-3 shadow">
         
-        <table class="table table-responsive">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Roll</th>
-                    <th>Image</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            <?php while ($radifa=mysqli_fetch_assoc($students)){?> 
-                <tr>
-                    <td><?php echo $radifa['ID']; ?></td>
-                    <td><?php echo $radifa['Name']; ?></td>
-                    <td><?php echo $radifa['Roll']; ?></td>
-                    <td>
-                        <img style="width:120px;height: 80px;" src="upload/<?php echo $radifa['img']; ?>" alt="">
-                    </td>
-                    <td>
-                        <a class="btn btn-success" href="edit.php?status=edit&&id=<?php echo $radifa['ID']; ?>">Edit</a>
-                        <a class="btn btn-warning" href="#">Delete</a>
-                    </td>
-                </tr>
-               <?php  }?>
-            </tbody>
-        </table>
-
-        </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
